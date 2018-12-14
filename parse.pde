@@ -12,7 +12,7 @@ void setup() {
   sections.addColumn("count");
 
   // load csv data into data table
-  data = loadTable("cleaned-hashicorp_internal_all.csv","header");
+  data = loadTable("cleaned-internal-all.csv", "header");
 
   domain = "www.hashicorp.com";
 
