@@ -1,6 +1,5 @@
-Table data, filtered, parsed;
+Table data, filtered, parsed, sections;
 String domain;
-String[] duplicates;
 
 void setup() {
   size(600,600);
@@ -8,14 +7,14 @@ void setup() {
   // setup filtered and parsed tables
   filtered = new Table();
   parsed = new Table();
+  sections = new Table();
+  sections.addColumn("section");
+  sections.addColumn("count");
 
   // load csv data into data table
   data = loadTable("cleaned-hashicorp_internal_all.csv","header");
 
   domain = "www.hashicorp.com";
-
-  duplicates = new String[1];
-  duplicates[0] = "homepage";
 
   // println("data Table: " + data.getRowCount());
 
@@ -45,29 +44,35 @@ void setup() {
     if (hasPeriod || hasQuestionmark){
       // println(procotolAndUrl[0] + ", " + domain + ", " + sectionAndUrl[1]);
     } else {
-
-      /*
-      for (int i = 0; i < duplicates.length; i++){
-        if (duplicates[i] == sectionAndUrl[1]) {
-          println(sectionAndUrl[1] + ": duplicate");
-        } else {
-          println(sectionAndUrl[1] + ": not duplicate");
-          // duplicates = splice(duplicates, sectionAndUrl[1], 1);
-        }
-      }
-      */
-
       TableRow parsedRow = parsed.addRow();
       parsedRow.setString("protocol", procotolAndUrl[0]);
       parsedRow.setString("domain", domain);
-
-      // only add if not duplicate
       parsedRow.setString("section", sectionAndUrl[1]);
-
     }
   }
 
-  saveTable(parsed, "data/parsed.csv");
+  for(TableRow row : parsed.rows()) {
+    String section = row.getString("section");
+    // println("section is " + section);
+
+    TableRow duplicateRow = sections.findRow(section, "section");
+
+    if (duplicateRow == null) {
+      // println("null");
+      TableRow sectionRow = sections.addRow();
+      sectionRow.setString("section", section);
+      sectionRow.setString("count", "1");
+    } else {
+      // println("not null");
+      String duplicateSection = duplicateRow.getString("section");
+      TableRow currentSection = sections.findRow(duplicateSection, "section");
+      String currentCount = currentSection.getString("count");
+      int newCount = int(currentCount) + 1;
+      currentSection.setString("count", str(newCount));
+    }
+  }
+  // saveTable(parsed, "data/parsed.csv");
+  saveTable(sections, "data/sections.csv");
 }
 
 void draw() {
