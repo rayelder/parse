@@ -1,5 +1,5 @@
 Table data, filtered, parsed, sections;
-String domain;
+String filename, domain;
 
 void setup() {
   size(600,600);
@@ -11,10 +11,14 @@ void setup() {
   sections.addColumn("section");
   sections.addColumn("count");
 
+  // 1. update CSV file
+  filename = "vaultproject-io";
+  // 2. update domain
+  domain = "www.vaultproject.io";
+  
   // load csv data into data table
-  data = loadTable("cleaned-internal-all.csv", "header");
-
-  domain = "www.hashicorp.com";
+  data = loadTable(filename + "-internal-all.csv", "header");
+  
 
   // println("data Table: " + data.getRowCount());
 
@@ -72,7 +76,7 @@ void setup() {
     }
   }
   // saveTable(parsed, "data/parsed.csv");
-  saveTable(sections, "data/sections.csv");
+  saveTable(sections, "data/" + filename + "-folders.csv");
 }
 
 void draw() {
