@@ -1,6 +1,6 @@
 # Parse
 
-Processing sketch to parse website crawl data.
+Processing sketch to parse website crawl data from Screaming Frog.
 
 ## Built With
 

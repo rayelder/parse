@@ -12,34 +12,34 @@ void setup() {
   sections.addColumn("count");
 
   // 1. update CSV file
-  filename = "vaultproject-io";
+  filename = "cloud-hashicorp-com";
+  
   // 2. update domain
-  domain = "www.vaultproject.io";
+  domain = "cloud.hashicorp.com";
   
   // load csv data into data table
-  data = loadTable(filename + "-internal-all.csv", "header");
+  data = loadTable(filename + "-internal_html.csv", "header");
   
 
   // println("data Table: " + data.getRowCount());
 
-  for(TableRow row : data.findRows("200", "status")) {
+  for(TableRow row : data.findRows("200", "Status")) {
     filtered.addRow(row);
   }
 
   // println("filtered Table: " + filtered.getRowCount());
 
-  for(TableRow row : data.findRows("200", "status")) {
+  for(TableRow row : data.findRows("Status", 200)) {
     // find url
-    String rawURL = row.getString("url");
+    String rawURL = row.getString("Address");
+    println("HI");
+    println(rawURL);
+    
     // remove https:// or http://
     String[] procotolAndUrl = split(rawURL, "://");
-    // println(procotolAndUrl);
-
     String[] domainAndUrl = split(procotolAndUrl[1], domain);
-    // println(domainAndUrl);
-
     String[] sectionAndUrl = split(domainAndUrl[1], "/");
-    // println(folderAndUrl);
+     //println(folderAndUrl);
 
     // search for "?" or "."
     boolean hasPeriod = doesContain(sectionAndUrl[1], ".");
@@ -75,8 +75,8 @@ void setup() {
       currentSection.setString("count", str(newCount));
     }
   }
-  // saveTable(parsed, "data/parsed.csv");
-  saveTable(sections, "data/" + filename + "-folders.csv");
+   saveTable(parsed, "data/parsed.csv");
+  //saveTable(sections, "data/" + filename + "-folders.csv");
 }
 
 void draw() {
